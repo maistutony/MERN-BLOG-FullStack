@@ -7,7 +7,7 @@ const DisplayUserBlogs = () => {
   const { userData } = useContext(UserContext);
   const userBlogs = userData.userPosts;
   return (
-    <div className="user-blogs">
+    <div className="user-blogs col-md-8">
       <h1>My Blogs</h1>
       <Table striped bordered hover>
         <thead>
@@ -19,14 +19,22 @@ const DisplayUserBlogs = () => {
           </tr>
         </thead>
         <tbody>
-          {userData && userBlogs.map((blog) => (
-            <tr key={blog._id}>
-              <td className="blog-title fw-bold">{blog.title}</td>
-              <td>{ blog.category}</td>
-              <td>{blog.description.slice(0,150)}</td>
-              <td>10 comment</td>
+          {userData &&
+            userBlogs.map((blog) => (
+              <tr key={blog._id}>
+                <td className="blog-title fw-bold">{blog.title}</td>
+                <td>{blog.category}</td>
+                <td>{blog.description.slice(0, 150)}</td>
+                <td>10 comment</td>
+              </tr>
+            ))}
+          {userData && userBlogs.length === 0 && (
+            <tr className="empty-blogs">
+              <td colSpan="4" className="text-center">
+                You have not submitted any post
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </Table>
     </div>

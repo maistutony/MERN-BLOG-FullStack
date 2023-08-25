@@ -1,6 +1,7 @@
-import React from "react";
+import React,{useContext} from "react";
 import { Card, ListGroup } from "react-bootstrap";
 import "./userProfile.css"
+import { UserContext } from "../../Context/Context";
 
 const user = {
   profilePic: "https://example.com/profile-pic.jpg",
@@ -11,6 +12,9 @@ const user = {
   // Add more user information as needed
 };
 const UserProfile = () => {
+  const { userData } = useContext(UserContext);
+  const userBio = userData.user;
+  const blogsWritten = userData.userPosts.length;
   return (
     <div className="cardBackground">
       <Card className="userCard">
@@ -22,14 +26,14 @@ const UserProfile = () => {
           src="https://ionicframework.com/docs/img/demos/thumbnail.svg"
         />
         <Card.Body>
-          <Card.Title className="my-2 text-dark">{user.name}</Card.Title>
-          <Card.Text className="my-2 text-dark">{user.bio}</Card.Text>
+          <Card.Title className="my-2 text-dark"> UserName: {userBio.userName}</Card.Title>
+          <Card.Text className="my-2 text-dark">proffession: Blogger</Card.Text>
         </Card.Body>
         <ListGroup className="my-2 list-group-flush">
           <ListGroup.Item className="my-2">
-            Posts Written: {user.posts}
+            Posts Written: {blogsWritten}
           </ListGroup.Item>
-          <ListGroup.Item className="my-2">Email: {user.email}</ListGroup.Item>
+          <ListGroup.Item className="my-2">Email: {userBio.email}</ListGroup.Item>
         </ListGroup>
       </Card>
     </div>

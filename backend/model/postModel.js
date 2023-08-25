@@ -1,6 +1,6 @@
 const mongoose= require("mongoose");
 
-const PostSchema = mongoose.Schema({
+const postSchema = mongoose.Schema({
   title: String,
   category: {
     type: String,
@@ -10,16 +10,17 @@ const PostSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+  },
   timePublished: {
     type: Date,
     required: true,
   },
   description: String,
   imageUrl: String,
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
-  },
+
   comments: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "users",
@@ -30,5 +31,6 @@ const PostSchema = mongoose.Schema({
   },
 });
 
+postSchema.index({title:1,description:1,content:1 })
 //create the athiBlog model instance then export it to routes folder
-module.exports=mongoose.model("posts",PostSchema);
+module.exports=mongoose.model("posts",postSchema);

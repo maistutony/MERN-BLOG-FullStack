@@ -5,7 +5,7 @@ const userModel = require("../model/usersModel");
 
 //register new user
 const registerUser = async (req, res) => {
-  const { email, password, userName } = req.body;
+  const { email, password, username } = req.body;
   try {
     if (!email || !password) { return res.status(400).json("please enter password and email") };
     const existingUser = await userModel.findOne({ email: email });
@@ -14,11 +14,12 @@ const registerUser = async (req, res) => {
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    userModel.create({
+    const userToSave=new userModel({
       password: hashedPassword,
-      email,
-      userName,
+      email:email,
+      userName:username
     });
+    const saveUser=await userToSave.save()
     return res.status(200).json("successfully registerd");
   } catch (error) {
     console.log(error.message)
@@ -40,7 +41,7 @@ const loginUser = async (req, res) => {
         return res.status(401).json("invalid password");
       } 
         existingUser.password = undefined;
-        const userPosts = await postModel.find({ id: existingUser._id });
+        const userPosts = await postModel.find({ author: existingUser._id });
         let combinedObject = {
           user: existingUser,
           userPosts: userPosts,

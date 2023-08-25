@@ -1,10 +1,14 @@
-import React from "react";
+import React,{useState,useContext} from "react";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import "./Registration.css"
+import { useNavigate } from "react-router-dom";
+import { isAuthenticatedContext } from "../../Context/Context";
 
 const Registration = () => {
+  const navigate=useNavigate()
+const {isRegistered,setisRegistered}=useContext(isAuthenticatedContext)
   const {
     register,
     handleSubmit,
@@ -13,7 +17,6 @@ const Registration = () => {
   } = useForm({
     mode: "onBlur",
   });
-
   async function submitData(payload) {
     try {
       const response = await axios.post(
@@ -26,9 +29,13 @@ const Registration = () => {
           },
         },
       );
-       console.log(response.data)
+      if (response.data === "successfully registered" && response.status === 200) {
+        setisRegistered(true);
+        alert("successfully registered")
+        navigate("/login")
+       }
     } catch (error) {
-      console.log(error);
+      console.log("network error");
     }
   }
 
@@ -39,9 +46,8 @@ const Registration = () => {
   const handleError = (errors) => {
     console.log(errors);
   };
-
   const registerOptions = {
-    username: { required: "Name is required" },
+    username: { required: "UserName is required" },
     email: { required: "Email is required" },
     password: {
       required: "Password is required",

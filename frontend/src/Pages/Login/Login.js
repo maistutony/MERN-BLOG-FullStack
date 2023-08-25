@@ -3,14 +3,14 @@ import { isAuthenticatedContext } from "../../Context/Context";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { Link,useNavigate } from "react-router-dom"
-import "./login.css"
+import { Link, useNavigate } from "react-router-dom";
+import "./login.css";
 import { UserContext } from "../../Context/Context";
 
 const Login = () => {
   const navigate = useNavigate();
   const { setisAuthenticated } = useContext(isAuthenticatedContext);
-   const {setuserData } = useContext(UserContext);
+  const { setuserData } = useContext(UserContext);
   const {
     register,
     handleSubmit,
@@ -27,24 +27,24 @@ const Login = () => {
         payload,
         {
           Headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
         },
       );
-      if (typeof response.data === "object" && response.data !== null) {
-        console.log(response.data == {});
-        setuserData(response.data);
-        navigate("/dashboard");
+      const responseData = response.data;
+      if (typeof responseData === "object" && response.status === 200) {
+       console.log(responseData)
+        setuserData(responseData);
         setisAuthenticated(true);
+        navigate("/dashboard");
+      } else {
+        console.log("server problem");
       }
-     else {
-          console.log("server problem");
-        }
     } catch (error) {
       if (error.message.includes("Network Error")) {
         console.log("Network Error: Please check your internet connection.");
       } else {
-        console.log(error.response.data)
+        console.log(error.response.data);
       }
     }
   }
@@ -78,7 +78,7 @@ const Login = () => {
         <Form.Group controlId="email">
           <Form.Label className="form-label">Email</Form.Label>
           <Form.Control
-          className="form-input"
+            className="form-input"
             type="email"
             name="email"
             {...register("email", registerOptions.email)}
@@ -90,7 +90,7 @@ const Login = () => {
         <Form.Group controlId="password">
           <Form.Label className="form-label">Password</Form.Label>
           <Form.Control
-          className="form-input"
+            className="form-input"
             type="password"
             name="password"
             {...register("password", registerOptions.password)}
@@ -102,7 +102,7 @@ const Login = () => {
             <p className="errorMsg">password is required.</p>
           )}
         </Form.Group>
-        <Button  className="login-button" variant="primary" type="submit">
+        <Button className="login-button" variant="primary" type="submit">
           Login
         </Button>
         <div className="login-text">

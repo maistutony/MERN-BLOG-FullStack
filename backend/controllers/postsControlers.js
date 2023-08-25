@@ -1,3 +1,4 @@
+const { response } = require("express");
 const posts = require("../model/postModel");
 const users = require("../model/usersModel");
 
@@ -7,17 +8,18 @@ const createPost = async (req, res) => {
     return res.json("supply a title");
   }
   const user = req.userId;
+   const postToSave = new posts({
+     title,
+     category,
+     content,
+     imageUrl,
+     description,
+     author: user,
+     timePublished: new Date().toLocaleString(),
+   });
   try {
-    const post = await posts.create({
-      title,
-      category,
-      content,
-      imageUrl,
-      description,
-      author: user,
-      timePublished: new Date().toLocaleString(),
-    });
-    return res.status(200).json(post);
+    const postSaved = await postToSave.save()
+    return res.status(200).json(postSaved);
   } catch (error) {
     console.log(error.message);
   }
@@ -33,7 +35,7 @@ const getPosts = async (req, res) => {
 const getPostsByCategory = async (req, res) => {
   const category = req.params.id
   try {
-    const categoryPosts = await posts.find({category:category});
+    const categoryPosts = await posts.find({category:category}).populate("author");
     res.status(200).json(categoryPosts);
   } catch (error) {
     res.json(error);
@@ -52,14 +54,15 @@ const deletePost = async (req, res) => {
   const id = req.params.id;
   const verifiedId = req.userId;
   try {
-    const postToDelete = await posts.findOne({ _id: id });
+    const postToDelete = await posts.findOne({ _id: id })
     if (!postToDelete) {
       return res.status(404).json("post not found");
+    } 
+    const postAuthorId = postToDelete.author.toString();
+    if (postAuthorIds !== verifiedId) {
+      return res.status(200).json("not authorized");
     }
-    if (postToDelete.author.toLocaleString() !== verifiedId) {
-      return res.status(403).json("not the author");
-    }
-    await postToDelete.remove();
+            postToDelete.remove();
     const userPosts = await posts.find({ author: verifiedId });
     res.status(200).json(userPosts);
   } catch (error) {
@@ -103,5 +106,24 @@ const editPost = async (req, res) => {
     res.json(error.message);
   }
 };
+const queryDataBase = async (req, res) => {
+  const query = req.query.query;
+  if (!query) {
+    return res.status(403).json("no query string");
+  }
+  try {
+  const searched = await posts.find({
+    $text: { $search: query },
+  });
+    if (searched) {
+      res.status(200).json(searched)
+  }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message:error.message });
+}
+  
 
-module.exports = { getSinglePost,getPosts,getPostsByCategory, deletePost, createPost, editPost };
+}
+module.exports = {queryDataBase,getSinglePost,getPosts,getPostsByCategory, deletePost, createPost, editPost };

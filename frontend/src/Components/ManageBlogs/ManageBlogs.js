@@ -20,13 +20,16 @@ const ManageBlogs = () => {
           authorization: `Bearer ${userData.token}`,
         },
       });
-      if (response.status === 200) {
+      if (response.status === 200 && typeof response.data === "object") {
+        console.log(response.data)
         setuserData((prev) => ({
           ...prev,
           userPosts: prev.userPosts.filter((blog) => blog._id !== id)
         }));
         return response.data;
       }
+      console.log(response.data)
+      return response.data
     } catch (error) {
       console.log(error.message);
     }

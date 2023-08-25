@@ -8,9 +8,10 @@
     margin: auto 32px;
 }
 
-.nav-link{
+.nav-link {
     font-size: 18px;
-} 
+}
+
 .navigation {
     width: 100%;
     justify-content: end;
@@ -21,4 +22,9 @@
 .bg-body-tertiary {
     background-color: #2F2FA2;
 
+}
+
+.search-input{
+    border-radius: 30px;
+    padding:2px 16px;
 }

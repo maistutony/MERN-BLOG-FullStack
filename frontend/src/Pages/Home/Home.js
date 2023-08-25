@@ -8,7 +8,8 @@ function Home() {
   const navigate = useNavigate();
   const { allPosts, setallPosts } = useContext(AllPostsContext);
   const [activePage, setActivePage] = useState(1);
-
+  const [loading,setLoading] =useState(true)
+ 
   const landingPageData = {
     title: "For climate tech startups, the IRA is starting to pay off",
     category:"technology",
@@ -27,17 +28,27 @@ function Home() {
           "Content-Type": "application/json",
         },
       });
-      if (response.status === 200) {
-        setallPosts(response.data);
-        return response.data;
-      }
+      const responseData=response.data
+      if (response.status === 200 && responseData.constructor === Array) {
+        setallPosts(responseData);
+        setLoading(false)
+        return responseData;
+      } else (
+        setLoading(false)
+      )
     } catch (error) {
-      console.log(error.message);
+      if (error.response.status === 400 || 401 || 404) {
+        setLoading(false)
+      }
+      console.log(error.response.message);
     }
   }
   useEffect(() => {
+     if (allPosts) {
+       setLoading(false);
+     }
     fetchPosts();
-  }, []);
+  }, [setLoading]);
   // Pagination logic
   const handlePageChange = (pageNumber) => {
     setActivePage(pageNumber);
@@ -47,7 +58,6 @@ function Home() {
   let totalPages;
   let currentPosts;
   let trendingPosts;
-  console.log(allPosts)
   if (allPosts!==null) {
     totalPages = Math.ceil(allPosts.length / 6);
     currentPosts = allPosts.slice(indexOfFirstBlog, indexOfLastBlog);
@@ -95,6 +105,7 @@ function Home() {
           <Col className="trending col-md-4">
             <h2>Trending</h2>
             {allPosts &&
+              loading === false &&
               trendingPosts.map((post) => (
                 <Card
                   key={post._id}
@@ -117,6 +128,8 @@ function Home() {
                   </Card.Body>
                 </Card>
               ))}
+            {allPosts === null && loading && <div>Loading posts ...</div>}
+            {allPosts && loading && <div>Loading posts ...</div>}
           </Col>
         </Row>
         <Row className="d-flex">

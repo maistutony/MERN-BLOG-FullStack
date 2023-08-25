@@ -1,5 +1,6 @@
 .user-blogs {
     margin: 16px 8px;
+    width: 100%;
 }
 
 .blog-title {
@@ -8,4 +9,8 @@
 
 .headings {
     color: #553D67;
+}
+
+.empty-blogs{
+    width: 100%;
 }

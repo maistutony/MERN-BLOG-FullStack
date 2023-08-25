@@ -3,8 +3,9 @@ import { isAuthenticatedContext } from "../../Context/Context";
 import { UserContext } from "../../Context/Context";
 import { Dropdown, Nav, Navbar } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser } from "react-icons/fa";
+import { FaUser,FaSearch } from "react-icons/fa";
 import "./Navigationbar.css"
+
 function Navigationbar() {
   const { isAuthenticated, setisAuthenticated } = useContext(
     isAuthenticatedContext
@@ -13,7 +14,9 @@ function Navigationbar() {
   const navigate = useNavigate();
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
-    <Link className="navbar-brand" to="/">TT NEWS</Link>
+      <Link className="navbar-brand" to="/">
+        TT NEWS
+      </Link>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="navigation ml-auto">
@@ -29,12 +32,15 @@ function Navigationbar() {
           <Link className="nav-link mx-2 text-light" to="/culture">
             Culture
           </Link>
-          <Link className="nav-link mx-2 text-light" to="/technology">
-            Business
+          <Link className="nav-link mx-2 text-light" to="/search">
+          <FaSearch/>
           </Link>
+
           <Link
             className={`${
-              isAuthenticated && (userData!==null) ? "d-none" : "d-block nav-link mx-2 text-light"
+              isAuthenticated && userData !== null
+                ? "d-none"
+                : "d-block nav-link mx-2 text-light"
             }`}
             to="/login"
           >
@@ -42,7 +48,9 @@ function Navigationbar() {
           </Link>
           <Dropdown
             className={`${
-              isAuthenticated && (userData!==null) ? "d-inline mx-2 dropdown text-light" : "d-none"
+              isAuthenticated && userData !== null
+                ? "d-inline mx-2 dropdown text-light"
+                : "d-none"
             }`}
           >
             <Dropdown.Toggle className="dropdown">
