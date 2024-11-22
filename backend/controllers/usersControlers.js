@@ -22,7 +22,6 @@ const registerUser = async (req, res) => {
     const saveUser=await userToSave.save()
     return res.status(200).json("successfully registerd");
   } catch (error) {
-    console.log(error.message)
    res.status(500).json({ error: 'Internal server error.' });
   }
 };
@@ -47,9 +46,11 @@ const loginUser = async (req, res) => {
           userPosts: userPosts,
           token: generated(existingUser._id),
         };
+        console.log(combinedObject)
         res.set("Authorization", `Bearer ${generated(existingUser._id)}`);
         return res.status(200).json(combinedObject);
   } catch (error) {
+    console.log(error)
     return res.json(error.message);
   }
 };

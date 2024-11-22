@@ -11,7 +11,7 @@ mongoose.set("strictQuery", false);
 
 mongoose
   .connect(process.env.URL_STRING, {
-    useNewUrlParser: true,
+    useNewUrlParser: true
   })
   .then(() => {
     console.log("Connected to db");
